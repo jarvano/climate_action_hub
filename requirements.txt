@@ -1,0 +1,13 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+pytz
+tzdata
+six
+packaging
+pillow
+pyparsing
+threadpoolctl
+threadpoolctl==3.6.0
+streamlit
