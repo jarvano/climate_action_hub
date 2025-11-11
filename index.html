@@ -20,7 +20,8 @@
         }
 
         .hero {
-            height: 100vh;
+            min-height: 100vh;
+            height: auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -29,6 +30,7 @@
             position: relative;
             animation: fadeIn 1.5s ease-out;
             padding-top: 120px; /* Move content down for better readability */
+            padding-bottom: 60px; /* Add bottom padding to prevent overflow */
         }
 
         .hero::before {
@@ -61,6 +63,7 @@
             display: flex;
             gap: 30px;
             margin-top: 40px;
+            margin-bottom: 40px;
             animation: fadeIn 1s ease-out 1s both;
             flex-wrap: wrap;
             justify-content: center;

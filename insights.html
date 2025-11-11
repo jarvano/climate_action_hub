@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💡 Data Insights - Climate Action Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .key-findings {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .finding-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .finding-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f5f7fa;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-recommendations {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .recommendation-icon {
+            font-size: 2rem;
+            margin-top: 5px;
+        }
+
+        .recommendation-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .recommendation-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .insight-card {
+                padding: 20px;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .recommendation-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>💡 Data Insights</h1>
+            <p>Deep analysis and actionable recommendations from climate data</p>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-card">
+                <h2 class="card-title">📊 Global Emissions Trends</h2>
+                <div class="chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+                <div class="key-findings">
+                    <div class="finding-title">🔍 Key Finding</div>
+                    <div class="finding-text">
+                        Global CO2 emissions have increased by 45% since 1990, with the steepest rise 
+                        occurring in developing nations. However, per-capita emissions remain highest in developed countries.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <h2 class="card-title">🌍 Regional Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="regionalChart"></canvas>
+                </div>
+                <div class="key-findings">
+                    <div class="finding-title">🔍 Key Finding</div>
+                    <div class="finding-text">
+                        Asia accounts for 52% of global emissions, while North America has the highest 
+                        per-capita emissions at 14.7 tons per person annually.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-card">
+                <h2 class="card-title">📈 Top Emitters Analysis</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>Total Emissions (Gt CO2)</th>
+                            <th>Per Capita (t CO2)</th>
+                            <th>Annual Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🇨🇳 China</td>
+                            <td>10.3</td>
+                            <td>7.4</td>
+                            <td>+2.1%</td>
+                        </tr>
+                        <tr>
+                            <td>🇺🇸 United States</td>
+                            <td>5.0</td>
+                            <td>14.7</td>
+                            <td>-1.2%</td>
+                        </tr>
+                        <tr>
+                            <td>🇮🇳 India</td>
+                            <td>2.6</td>
+                            <td>1.9</td>
+                            <td>+4.5%</td>
+                        </tr>
+                        <tr>
+                            <td>🇷🇺 Russia</td>
+                            <td>1.7</td>
+                            <td>11.9</td>
+                            <td>+0.8%</td>
+                        </tr>
+                        <tr>
+                            <td>🇯🇵 Japan</td>
+                            <td>1.1</td>
+                            <td>8.7</td>
+                            <td>-2.1%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-card">
+                <h2 class="card-title">📊 Key Metrics</h2>
+                <div class="metric-card">
+                    <div class="metric-value">36.8</div>
+                    <div class="metric-label">Global CO2 Emissions (Gt)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">4.8</div>
+                    <div class="metric-label">Per Capita Emissions (t CO2)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">+1.2%</div>
+                    <div class="metric-label">Annual Growth Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">420</div>
+                    <div class="metric-label">Atmospheric CO2 (ppm)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-recommendations">
+            <h2 class="card-title">🎯 Actionable Recommendations</h2>
+            
+            <div class="recommendation-item">
+                <div class="recommendation-icon">🌱</div>
+                <div class="recommendation-content">
+                    <h3>Accelerate Renewable Energy Transition</h3>
+                    <p>Countries with high per-capita emissions should prioritize rapid deployment of renewable energy infrastructure. This could reduce emissions by 30-50% in developed nations within a decade.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="recommendation-icon">🏭</div>
+                <div class="recommendation-content">
+                    <h3>Support Clean Technology Transfer</h3>
+                    <p>Developed nations should facilitate technology transfer to emerging economies to help them leapfrog carbon-intensive development phases and achieve sustainable growth.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="recommendation-icon">🚗</div>
+                <div class="recommendation-content">
+                    <h3>Implement Carbon Pricing Mechanisms</h3>
+                    <p>Establish comprehensive carbon pricing systems that reflect the true environmental cost of emissions and incentivize low-carbon alternatives across all sectors.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="recommendation-icon">🌳</div>
+                <div class="recommendation-content">
+                    <h3>Scale Up Natural Carbon Sinks</h3>
+                    <p>Invest in large-scale reforestation and ecosystem restoration projects. Natural carbon sinks can provide 30% of the emissions reductions needed by 2030.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="recommendation-icon">🏙️</div>
+                <div class="recommendation-content">
+                    <h3>Transform Urban Infrastructure</h3>
+                    <p>Redesign cities for sustainability with improved public transport, energy-efficient buildings, and green spaces to reduce urban emissions by up to 70%.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Emissions Trends Chart
+        const ctx1 = document.getElementById('trendsChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2023'],
+                datasets: [{
+                    label: 'Global CO2 Emissions',
+                    data: [22.7, 24.2, 25.8, 29.1, 33.5, 35.9, 34.8, 36.8],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }, {
+                    label: 'Per Capita Emissions',
+                    data: [4.3, 4.2, 4.2, 4.5, 4.9, 4.9, 4.5, 4.8],
+                    borderColor: '#764ba2',
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#764ba2',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions Trends (1990-2023)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Total Emissions (Gt CO2)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Per Capita (t CO2)'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                }
+            }
+        });
+
+        // Regional Comparison Chart
+        const ctx2 = document.getElementById('regionalChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Asia', 'North America', 'Europe', 'Africa', 'South America', 'Oceania'],
+                datasets: [{
+                    data: [52, 18, 15, 8, 5, 2],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c',
+                        '#4facfe',
+                        '#00f2fe'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Regional CO2 Emissions Distribution (%)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

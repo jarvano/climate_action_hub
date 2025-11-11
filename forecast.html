@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 Climate Forecast - Climate Action Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .forecast-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .prediction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .prediction-table th,
+        .prediction-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .prediction-table th {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .prediction-table tr:hover {
+            background: #f5f7fa;
+        }
+
+        .trend-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .trend-up {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .trend-down {
+            background: #51cf66;
+            color: white;
+        }
+
+        .trend-stable {
+            background: #ffd43b;
+            color: #333;
+        }
+
+        .insights-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .insight-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2a5298;
+        }
+
+        .insight-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .insight-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .forecast-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .forecast-card,
+            .insights-panel {
+                padding: 20px;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .prediction-table th,
+            .prediction-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Climate Forecast</h1>
+            <p>Advanced predictive modeling for environmental trends and emissions forecasting</p>
+        </div>
+
+        <div class="forecast-grid">
+            <div class="forecast-card">
+                <h2 class="card-title">📈 Global CO2 Forecast</h2>
+                <div class="chart-container">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+                <p style="color: #666; font-size: 0.9rem; text-align: center;">
+                    Predicted CO2 emissions based on current trends and policy scenarios
+                </p>
+            </div>
+
+            <div class="forecast-card">
+                <h2 class="card-title">🌍 Regional Predictions</h2>
+                <div class="chart-container">
+                    <canvas id="regionalChart"></canvas>
+                </div>
+                <p style="color: #666; font-size: 0.9rem; text-align: center;">
+                    Forecasted emissions by region for the next decade
+                </p>
+            </div>
+        </div>
+
+        <div class="forecast-card">
+            <h2 class="card-title">📊 Forecast Data Table</h2>
+            <table class="prediction-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Predicted CO2 (Gt)</th>
+                        <th>Confidence Level</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody id="forecastTable">
+                    <tr>
+                        <td>2024</td>
+                        <td>36.8</td>
+                        <td>95%</td>
+                        <td><span class="trend-indicator trend-up">↗ Rising</span></td>
+                    </tr>
+                    <tr>
+                        <td>2025</td>
+                        <td>37.2</td>
+                        <td>90%</td>
+                        <td><span class="trend-indicator trend-up">↗ Rising</span></td>
+                    </tr>
+                    <tr>
+                        <td>2026</td>
+                        <td>37.5</td>
+                        <td>85%</td>
+                        <td><span class="trend-indicator trend-stable">→ Stable</span></td>
+                    </tr>
+                    <tr>
+                        <td>2027</td>
+                        <td>37.3</td>
+                        <td>80%</td>
+                        <td><span class="trend-indicator trend-down">↘ Declining</span></td>
+                    </tr>
+                    <tr>
+                        <td>2028</td>
+                        <td>36.9</td>
+                        <td>75%</td>
+                        <td><span class="trend-indicator trend-down">↘ Declining</span></td>
+                    </tr>
+                    <tr>
+                        <td>2029</td>
+                        <td>36.4</td>
+                        <td>70%</td>
+                        <td><span class="trend-indicator trend-down">↘ Declining</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insights-panel">
+            <h2 class="card-title">💡 Key Insights & Recommendations</h2>
+            
+            <div class="insight-item">
+                <div class="insight-title">🌱 Immediate Action Required</div>
+                <div class="insight-text">
+                    Current trends indicate a continued rise in global CO2 emissions through 2026. 
+                    Immediate policy interventions are crucial to meet climate targets.
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">📈 Regional Variations</div>
+                <div class="insight-text">
+                    Developed regions show declining trends, while emerging economies 
+                    continue to drive global emissions growth. Technology transfer is essential.
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">🎯 Policy Impact</div>
+                <div class="insight-text">
+                    Aggressive climate policies could accelerate the declining trend 
+                    post-2026, potentially reducing emissions by 15% by 2030.
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">⚠️ Uncertainty Factors</div>
+                <div class="insight-text">
+                    Economic recovery, technological breakthroughs, and policy changes 
+                    significantly affect forecast accuracy beyond 2027.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global CO2 Forecast Chart
+        const ctx1 = document.getElementById('forecastChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                datasets: [{
+                    label: 'Historical CO2 Emissions',
+                    data: [34.8, 35.2, 35.8, 36.2, null, null, null, null, null, null, null],
+                    borderColor: '#2a5298',
+                    backgroundColor: 'rgba(42, 82, 152, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#2a5298',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }, {
+                    label: 'Predicted CO2 Emissions',
+                    data: [null, null, null, 36.2, 36.8, 37.2, 37.5, 37.3, 36.9, 36.4, 35.8],
+                    borderColor: '#ff6b6b',
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                    borderWidth: 3,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    pointBackgroundColor: '#ff6b6b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions Forecast (Gt CO2)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (Gt)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Regional Predictions Chart
+        const ctx2 = document.getElementById('regionalChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['North America', 'Europe', 'Asia', 'South America', 'Africa', 'Oceania'],
+                datasets: [{
+                    label: '2024 Predicted Emissions',
+                    data: [6.2, 4.1, 18.5, 1.8, 2.1, 0.8],
+                    backgroundColor: 'rgba(42, 82, 152, 0.8)',
+                    borderColor: '#2a5298',
+                    borderWidth: 1
+                }, {
+                    label: '2029 Predicted Emissions',
+                    data: [5.8, 3.2, 19.1, 2.0, 2.8, 0.7],
+                    backgroundColor: 'rgba(255, 107, 107, 0.8)',
+                    borderColor: '#ff6b6b',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Regional CO2 Emissions Comparison (Gt CO2)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (Gt)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Region'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
