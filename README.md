@@ -54,19 +54,8 @@
 
 ## 🚀 **Live Demo**
 
-**🌐 Try it now:** [https://jarvano.github.io/climate_action_hub/](https://jarvano.github.io/climate_action_hub/)
-
-### **⚡ Quick Start (Local Development)**
-```bash
-# ⏱️ Get started in 30 seconds:
-git clone https://github.com/Javan/climate-action-hub.git
-cd climate-action-hub
-python src/simple_server.py 8080
-```
-
-**🌐 Local Development:**
-- **Homepage:** http://localhost:8080
-- **Dashboard:** http://localhost:8080/dashboard
+**🌐 Experience the Climate Action Hub instantly:**
+🔗 **[https://jarvano.github.io/climate_action_hub/](https://jarvano.github.io/climate_action_hub/)**
 
 ---
 
@@ -164,31 +153,11 @@ python src/simple_server.py 8080
 
 ---
 
-## 🚀 **Quick Start Guide**
+## 🚀 **Get Started**
 
-### **📋 Prerequisites**
-- Python 3.7+ (any version works!)
-- Web browser (Chrome, Firefox, Safari, Edge)
-- 2 minutes of your time ⏰
-
-### **⚡ Installation**
-```bash
-# 1. Clone the repository
-git clone https://github.com/Javan/climate-action-hub.git
-
-# 2. Navigate to project
-cd climate-action-hub
-
-# 3. Start the server
-python src/simple_server.py 8080
-
-# 4. Open browser
-# Homepage: http://localhost:8080
-# Dashboard: http://localhost:8080/dashboard
-```
-
-### **🎯 That's it!** 
-No virtual environments, no pip installs, no configuration files. Just pure Python magic! ✨
+### **🌐 Live Demo**
+Experience the Climate Action Hub instantly:
+🔗 **[Live Demo](https://jarvano.github.io/climate_action_hub/)**
 
 ### **📊 Pitch Deck**
 Check out our comprehensive pitch deck for detailed project insights:
