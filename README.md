@@ -190,6 +190,10 @@ python src/simple_server.py 8080
 ### **🎯 That's it!** 
 No virtual environments, no pip installs, no configuration files. Just pure Python magic! ✨
 
+### **📊 Pitch Deck**
+Check out our comprehensive pitch deck for detailed project insights:
+🔗 **[AI for Climate Action: Forecasting Carbon Emissions Using Machine Learning](https://gamma.app/docs/AI-for-Climate-Action-Forecasting-Carbon-Emissions-Using-Machine--mqdg42ttufiewzm)**
+
 ---
 
 ## 📈 **Data Sources**
