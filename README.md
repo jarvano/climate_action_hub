@@ -54,6 +54,9 @@
 
 ## 🚀 **Live Demo**
 
+**🌐 Try it now:** [https://jarvano.github.io/climate_action_hub/](https://jarvano.github.io/climate_action_hub/)
+
+### **⚡ Quick Start (Local Development)**
 ```bash
 # ⏱️ Get started in 30 seconds:
 git clone https://github.com/Javan/climate-action-hub.git
@@ -61,7 +64,7 @@ cd climate-action-hub
 python src/simple_server.py 8080
 ```
 
-**🌐 Open your browser:**
+**🌐 Local Development:**
 - **Homepage:** http://localhost:8080
 - **Dashboard:** http://localhost:8080/dashboard
 
