@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 CO2 Dashboard - Climate Action Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2a5298;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .country-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .country-selector select {
+            padding: 10px 15px;
+            border: 2px solid #2a5298;
+            border-radius: 25px;
+            background: white;
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .country-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        
+        <div class="header">
+            <h1>📊 CO2 Emissions Dashboard</h1>
+            <p>Interactive visualization of global carbon emissions data</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">36.8</div>
+                <div class="stat-label">Global CO2 Emissions (Gt)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1.5°C</div>
+                <div class="stat-label">Target Limit</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">195</div>
+                <div class="stat-label">Countries Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2023</div>
+                <div class="stat-label">Latest Data Year</div>
+            </div>
+        </div>
+
+        <div class="country-selector">
+            <select id="countrySelect">
+                <option value="World">Global Overview</option>
+                <option value="China">China</option>
+                <option value="United States">United States</option>
+                <option value="India">India</option>
+                <option value="Russia">Russia</option>
+                <option value="Japan">Japan</option>
+                <option value="Germany">Germany</option>
+                <option value="Iran">Iran</option>
+                <option value="South Korea">South Korea</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+            </select>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">📈 Historical CO2 Emissions Trend</h3>
+                <div class="chart-container">
+                    <canvas id="emissionsChart"></canvas>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                    Global CO2 emissions from fossil fuels and industry (1990-2023)
+                </p>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">🥧 Top Emitters by Country</h3>
+                <div class="chart-container">
+                    <canvas id="countriesChart"></canvas>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                    Share of global CO2 emissions by country (2023)
+                </p>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">📊 Emissions by Sector</h3>
+                <div class="chart-container">
+                    <canvas id="sectorsChart"></canvas>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                    Global CO2 emissions breakdown by economic sector
+                </p>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">🌍 Per Capita Emissions</h3>
+                <div class="chart-container">
+                    <canvas id="perCapitaChart"></canvas>
+                </div>
+                <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                    CO2 emissions per capita by region (tons per person)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js default configuration
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.color = '#333';
+
+        // Historical Emissions Trend Chart
+        const ctx1 = document.getElementById('emissionsChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2023'],
+                datasets: [{
+                    label: 'Global CO2 Emissions (Gt)',
+                    data: [22.7, 23.5, 25.2, 28.9, 31.8, 33.1, 34.8, 36.8],
+                    borderColor: '#2a5298',
+                    backgroundColor: 'rgba(42, 82, 152, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#2a5298',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }, {
+                    label: '1.5°C Target Pathway',
+                    data: [22.7, 21.5, 20.0, 18.0, 15.0, 12.0, 8.0, 5.0],
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [10, 5],
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions vs Climate Targets',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' Gt CO2';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0,
+                        max: 40,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (Gigatons)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+
+        // Top Countries Chart
+        const ctx2 = document.getElementById('countriesChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['China', 'United States', 'India', 'Russia', 'Japan', 'Germany', 'Iran', 'South Korea', 'Others'],
+                datasets: [{
+                    data: [30.7, 13.5, 7.3, 4.7, 3.2, 2.4, 2.0, 1.8, 34.4],
+                    backgroundColor: [
+                        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
+                        '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#AED6F1'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions by Country (2023)',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Emissions by Sector Chart
+        const ctx3 = document.getElementById('sectorsChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['Electricity & Heat', 'Transportation', 'Industry', 'Buildings', 'Agriculture', 'Other'],
+                datasets: [{
+                    label: 'CO2 Emissions (Gt)',
+                    data: [14.2, 7.8, 6.9, 3.2, 2.8, 1.9],
+                    backgroundColor: [
+                        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'
+                    ],
+                    borderColor: [
+                        '#FF5252', '#26A69A', '#2196F3', '#66BB6A', '#FFD54F', '#BA68C8'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions by Sector',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' Gt CO2';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (Gigatons)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Economic Sector'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Per Capita Emissions Chart
+        const ctx4 = document.getElementById('perCapitaChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels: ['North America', 'Europe', 'Asia', 'South America', 'Africa', 'Oceania'],
+                datasets: [{
+                    label: 'Per Capita Emissions (tons)',
+                    data: [15.3, 7.2, 4.8, 3.1, 1.2, 11.7],
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    borderColor: '#667eea',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'CO2 Emissions Per Capita by Region',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' tons per person';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Emissions (tons per person)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Region'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Country selector functionality
+        document.getElementById('countrySelect').addEventListener('change', function() {
+            const selectedCountry = this.value;
+            // In a real application, this would update the charts with country-specific data
+            console.log('Selected country:', selectedCountry);
+            // For now, we'll just show an alert
+            if (selectedCountry !== 'World') {
+                alert(`Loading data for ${selectedCountry}... (This is a demo - full country data would be loaded in a production environment)`);
+            }
+        });
+    </script>
+</body>
+</html>
