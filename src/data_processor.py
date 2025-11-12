@@ -78,39 +78,25 @@ def load_co2_data():
         return None
 
 def get_major_countries_data():
-    """Get data for major countries with substantial data coverage"""
+    """Get data for all countries with CO2 data"""
     all_data = load_co2_data()
     if not all_data:
         return None
     
-    # Define major countries to include
-    major_countries = [
-        "United States", "China", "India", "Russia", "Japan", "Germany", 
-        "Canada", "Brazil", "United Kingdom", "France", "Italy", "Australia",
-        "South Korea", "Mexico", "Indonesia", "Saudi Arabia", "Turkey", "Iran",
-        "Thailand", "Poland", "South Africa", "Argentina", "Egypt", "Malaysia",
-        "Kenya", "Nigeria", "Ethiopia", "Philippines", "Vietnam", "Ukraine"
-    ]
-    
-    # Filter for countries with good data coverage (at least 10 years of data)
-    filtered_data = {}
+    # Return all countries that have data
     available_countries = []
+    filtered_data = {}
     
-    for country in major_countries:
-        if country in all_data and len(all_data[country]["historical"]) >= 10:
-            filtered_data[country] = all_data[country]
+    # Include all countries with at least 5 years of data for better user experience
+    for country, data in all_data.items():
+        if len(data["historical"]) >= 5:  # Minimum 5 years of data
             available_countries.append(country)
+            filtered_data[country] = data
     
-    # Add a few more countries if we don't have enough
-    if len(available_countries) < 10:
-        for country, data in all_data.items():
-            if country not in filtered_data and len(data["historical"]) >= 15:
-                filtered_data[country] = data
-                available_countries.append(country)
-                if len(available_countries) >= 15:
-                    break
+    # Sort countries alphabetically for better UX
+    available_countries.sort()
     
-    # Get year range
+    # Get year range from all available data
     all_years = set()
     for country_data in filtered_data.values():
         for point in country_data["historical"]:

@@ -473,9 +473,10 @@
             <div class="controls-grid">
                 <div class="control-group">
                     <label for="countrySelect">🌏 Select Country</label>
-                    <select id="countrySelect">
+                    <select id="countrySelect" style="max-height: 300px; overflow-y: auto;">
                         <option value="">Loading countries...</option>
                     </select>
+                    <small style="color: #666; font-size: 0.8rem;">Start typing to search or scroll through all countries</small>
                 </div>
                 
                 <div class="control-group">
@@ -769,11 +770,33 @@
             defaultOption.textContent = 'Select a country...';
             select.appendChild(defaultOption);
             
-            data.countries.forEach(country => {
+            // Sort countries alphabetically
+            const sortedCountries = data.countries.sort();
+            
+            sortedCountries.forEach(country => {
                 const option = document.createElement('option');
                 option.value = country;
                 option.textContent = country;
                 select.appendChild(option);
+            });
+            
+            // Add search functionality
+            select.addEventListener('keydown', function(e) {
+                if (e.key.length === 1 || e.key === 'Backspace') {
+                    setTimeout(() => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const options = Array.from(select.options);
+                        
+                        options.forEach(option => {
+                            const text = option.textContent.toLowerCase();
+                            if (text.includes(searchTerm) || searchTerm === '') {
+                                option.style.display = '';
+                            } else {
+                                option.style.display = 'none';
+                            }
+                        });
+                    }, 0);
+                }
             });
         }
 
