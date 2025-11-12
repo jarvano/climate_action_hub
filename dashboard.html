@@ -751,11 +751,24 @@
                     }
                 })
                 .catch(error => {
-                    console.log('Could not load real data, using sample data:', error);
-                    realData = sampleData;
-                    populateCountrySelect();
-                    showStatus('ℹ️ Using sample data. Real data loading failed.', 'error');
-                    return false;
+                    console.log('Could not load real data, trying static data:', error);
+                    // Try to load static data file for GitHub Pages
+                    return fetch('data/static_dashboard_data.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            realData = data;
+                            console.log('Loaded static data:', realData);
+                            populateCountrySelect();
+                            showStatus('✅ Static data loaded successfully!', 'success');
+                            return true;
+                        })
+                        .catch(staticError => {
+                            console.log('Could not load static data, using sample data:', staticError);
+                            realData = sampleData;
+                            populateCountrySelect();
+                            showStatus('ℹ️ Using sample data. Real and static data loading failed.', 'error');
+                            return false;
+                        });
                 });
         }
 
@@ -798,6 +811,10 @@
                     }, 0);
                 }
             });
+            
+            // Show country count
+            const countryCount = sortedCountries.length;
+            showStatus(`🌍 Loaded ${countryCount} countries`, 'success');
         }
 
         // Initialize chart
