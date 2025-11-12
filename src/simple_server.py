@@ -19,15 +19,27 @@ except ImportError:
 
 class CO2DashboardHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        print(f"Request path: {self.path}")
+        # Handle specific routes first
         if self.path == '/':
             self.path = '/index.html'
         elif self.path == '/api/data':
             self.serve_data()
             return
-        elif self.path == '/dashboard.html':
-            self.path = '/dashboard.html'
+        elif self.path.startswith('/login.html'):
+            print("Serving login.html template")
+            self.serve_template_file('login.html')
+            return
+        elif self.path.startswith('/register.html'):
+            print("Serving register.html template")
+            self.serve_template_file('register.html')
+            return
+        elif self.path.startswith('/preferences.html'):
+            print("Serving preferences.html template")
+            self.serve_template_file('preferences.html')
+            return
         
-        # Serve static files
+        # Handle static files (including dashboard.html)
         if self.path.endswith('.html') or self.path.endswith('.js') or self.path.endswith('.css'):
             try:
                 with open(self.path[1:], 'rb') as f:
@@ -44,6 +56,27 @@ class CO2DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(404, "File not found")
         else:
             super().do_GET()
+    
+    def serve_template_file(self, template_name):
+        """Serve template files from the templates directory"""
+        try:
+            # Get the absolute path to the template file
+            current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            template_path = os.path.join(current_dir, 'templates', template_name)
+            print(f"Trying to serve template: {template_path}")
+            
+            with open(template_path, 'rb') as f:
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(f.read())
+                print(f"Served template file: {template_name}")
+        except FileNotFoundError:
+            print(f"Template file not found: {template_name}")
+            self.send_error(404, f"Template file {template_name} not found")
+        except Exception as e:
+            print(f"Error serving template {template_name}: {e}")
+            self.send_error(500, f"Error serving template: {str(e)}")
     
     def serve_data(self):
         try:

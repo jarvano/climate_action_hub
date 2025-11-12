@@ -232,6 +232,44 @@
             opacity: 0.9;
         }
         
+        .demo-accounts {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .demo-accounts h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .demo-account {
+            background: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .demo-account strong {
+            color: #2c3e50;
+        }
+        
+        .demo-account code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
         .loading {
             display: none;
             text-align: center;
@@ -277,15 +315,10 @@
         </div>
         
         <div class="auth-form">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            <!-- Message area for alerts - replaced Jinja2 with static HTML -->
+            <div id="message-area" style="display: none;">
+                <!-- Messages will be displayed here via JavaScript if needed -->
+            </div>
             
             <form method="POST" id="registerForm">
                 <div class="form-group">
@@ -336,6 +369,25 @@
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <p>Creating your account...</p>
+            </div>
+        </div>
+        
+        <div class="demo-accounts">
+            <h3>Demo Accounts</h3>
+            <div class="demo-account">
+                <strong>Admin User:</strong><br>
+                Username: <code>admin</code><br>
+                Password: <code>admin123</code>
+            </div>
+            <div class="demo-account">
+                <strong>Regular User:</strong><br>
+                Username: <code>user</code><br>
+                Password: <code>user123</code>
+            </div>
+            <div class="demo-account">
+                <strong>Guest User:</strong><br>
+                Username: <code>guest</code><br>
+                Password: <code>guest123</code>
             </div>
         </div>
         
