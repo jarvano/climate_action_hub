@@ -1,0 +1,695 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Climate Action Hub{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <nav class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <span class="earth-emoji">🌍</span>
+                <span>Climate Hub</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">{{ current_user.username[0].upper() }}</div>
+                <div class="user-details">
+                    <div class="username">{{ current_user.username }}</div>
+                    <div class="user-role">{{ current_user.role|title }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item active">
+                <a href="{{ url_for('dashboard') }}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('analytics') }}" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('saved_analyses') }}" class="nav-link">
+                    <i class="fas fa-save"></i>
+                    <span>Saved Analyses</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('forecast') }}" class="nav-link">
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>Climate Forecast</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('insights') }}" class="nav-link">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Insights</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('preferences') }}" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Preferences</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('profile') }}" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-link logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1>Welcome back, {{ current_user.username }}!</h1>
+                <p class="subtitle">Here's what's happening with your climate action journey</p>
+            </div>
+            <div class="header-right">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='{{ url_for('forecast') }}'">
+                        <i class="fas fa-plus"></i> New Analysis
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-icon climate">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Impact Score</h3>
+                    <div class="card-value">{{ preferences.impact_score if preferences else 0 }}</div>
+                    <div class="card-change positive">
+                        <i class="fas fa-arrow-up"></i> +12% this month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon countries">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Countries Tracked</h3>
+                    <div class="card-value">{{ preferences.preferred_countries|length if preferences else 0 }}</div>
+                    <div class="card-change neutral">
+                        <i class="fas fa-minus"></i> No change
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon analyses">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Saved Analyses</h3>
+                    <div class="card-value">{{ recent_analyses|length }}</div>
+                    <div class="card-change positive">
+                        <i class="fas fa-arrow-up"></i> +5 this week
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon alerts">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Forecast Alerts</h3>
+                    <div class="card-value">{{ preferences.forecast_alerts|length if preferences else 0 }}</div>
+                    <div class="card-change negative">
+                        <i class="fas fa-arrow-down"></i> -2 today
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Recent Activity -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <a href="{{ url_for('analytics') }}" class="view-all">View All →</a>
+                </div>
+                <div class="activity-list">
+                    {% for analysis in recent_analyses[:3] %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ analysis.title }}</div>
+                            <div class="activity-description">{{ analysis.description[:100] }}...</div>
+                            <div class="activity-time">{{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-sm btn-outline" onclick="viewAnalysis({{ analysis.id }})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Quick Actions</h2>
+                </div>
+                <div class="quick-actions-grid">
+                    <div class="quick-action" onclick="window.location.href='{{ url_for('forecast') }}'">
+                        <div class="action-icon">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <div class="action-title">Climate Forecast</div>
+                        <div class="action-description">Generate new climate predictions</div>
+                    </div>
+                    
+                    <div class="quick-action" onclick="window.location.href='{{ url_for('insights') }}'">
+                        <div class="action-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="action-title">Get Insights</div>
+                        <div class="action-description">AI-powered climate insights</div>
+                    </div>
+                    
+                    <div class="quick-action" onclick="window.location.href='{{ url_for('saved_analyses') }}'">
+                        <div class="action-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div class="action-title">View Saved</div>
+                        <div class="action-description">Access your saved analyses</div>
+                    </div>
+                    
+                    <div class="quick-action" onclick="window.location.href='{{ url_for('preferences') }}'">
+                        <div class="action-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="action-title">Settings</div>
+                        <div class="action-description">Update your preferences</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.dashboard-sidebar {
+    width: 280px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.sidebar-logo .earth-emoji {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.user-role {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.sidebar-nav {
+    flex: 1;
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin: 2px 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: 0 25px 25px 0;
+    margin-right: 20px;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+.nav-item.active .nav-link {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    font-weight: 600;
+}
+
+.nav-link i {
+    width: 20px;
+    margin-right: 12px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.logout {
+    color: #ff6b6b !important;
+}
+
+.logout:hover {
+    background: rgba(255,107,107,0.1) !important;
+}
+
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.header-left h1 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 28px;
+}
+
+.subtitle {
+    color: #718096;
+    margin: 5px 0 0;
+    font-size: 16px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+    color: #4a5568;
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e53e3e;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 30px 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.card-icon.climate {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+}
+
+.card-icon.countries {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+}
+
+.card-icon.analyses {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    color: #2d3748;
+}
+
+.card-icon.alerts {
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    color: #2d3748;
+}
+
+.card-content h3 {
+    margin: 0 0 10px;
+    color: #4a5568;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.card-change {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.card-change.positive {
+    color: #38a169;
+}
+
+.card-change.negative {
+    color: #e53e3e;
+}
+
+.card-change.neutral {
+    color: #718096;
+}
+
+.dashboard-content {
+    padding: 0 40px 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.content-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 20px;
+}
+
+.view-all {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.view-all:hover {
+    color: #5a67d8;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f7fafc;
+    transition: background 0.3s ease;
+}
+
+.activity-item:hover {
+    background: #edf2f7;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.activity-description {
+    color: #718096;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.activity-time {
+    color: #a0aec0;
+    font-size: 12px;
+}
+
+.activity-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+}
+
+.btn-outline:hover {
+    background: #f7fafc;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.quick-action {
+    padding: 20px;
+    border-radius: 10px;
+    background: #f7fafc;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quick-action:hover {
+    background: #edf2f7;
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #667eea;
+}
+
+.action-title {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.action-description {
+    color: #718096;
+    font-size: 12px;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+    }
+    
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function viewAnalysis(analysisId) {
+    window.location.href = `/analysis/${analysisId}`;
+}
+
+// Add some interactive animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate cards on load
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        }, index * 100);
+    });
+    
+    // Add click handlers for navigation
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (!this.classList.contains('logout')) {
+                navLinks.forEach(l => l.parentElement.classList.remove('active'));
+                this.parentElement.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

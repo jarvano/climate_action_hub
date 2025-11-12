@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Climate Action Hub - User Authentication and Preferences System
-A comprehensive Flask application with user authentication, session management, and personalized preferences.
+Climate Action Hub - Simplified User Authentication System
+A basic Flask application with user authentication for testing the new user pages.
 """
 
 import os
@@ -12,9 +12,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-import pandas as pd
-import numpy as np
 
 # Initialize Flask app
 app = Flask(__name__, template_folder='.', static_folder='.')
@@ -320,7 +317,20 @@ def preferences():
             db.session.rollback()
             flash('Failed to update preferences.', 'danger')
     
-    return render_template('preferences.html', preferences=user_preferences)
+    return render_template('user_preferences.html', preferences=user_preferences)
+
+@app.route('/analytics')
+@login_required
+def analytics():
+    """User analytics page"""
+    return render_template('user_analytics.html')
+
+@app.route('/saved_analyses')
+@login_required
+def saved_analyses():
+    """User saved analyses page"""
+    user_analyses = SavedAnalysis.query.filter_by(user_id=current_user.id).order_by(SavedAnalysis.created_at.desc()).all()
+    return render_template('user_saved.html', analyses=user_analyses)
 
 @app.route('/save_analysis', methods=['POST'])
 @login_required
@@ -348,76 +358,48 @@ def save_analysis():
         db.session.rollback()
         return jsonify({'success': False, 'message': 'Failed to save analysis.'})
 
-@app.route('/analytics')
-@login_required
-def analytics():
-    """User analytics page"""
-    return render_template('user_analytics.html')
-
-@app.route('/saved_analyses')
-@login_required
-def saved_analyses():
-    """User saved analyses page"""
-    user_analyses = SavedAnalysis.query.filter_by(user_id=current_user.id).order_by(SavedAnalysis.created_at.desc()).all()
-    return render_template('user_saved.html', analyses=user_analyses)
-
-@app.route('/my_analyses')
-@login_required
-def my_analyses():
-    """User's saved analyses"""
-    analyses = SavedAnalysis.query.filter_by(user_id=current_user.id).order_by(SavedAnalysis.created_at.desc()).all()
-    return render_template('my_analyses.html', analyses=analyses)
-
-@app.route('/api/user/preferences')
-@login_required
-def get_user_preferences():
-    """API endpoint for user preferences"""
-    preferences = UserPreferences.query.filter_by(user_id=current_user.id).first()
-    if preferences:
-        return jsonify({
-            'theme': preferences.theme,
-            'chart_type': preferences.chart_type,
-            'data_granularity': preferences.data_granularity,
-            'preferred_countries': preferences.get_preferred_countries(),
-            'preferred_regions': preferences.get_preferred_regions(),
-            'preferred_sectors': preferences.get_preferred_sectors(),
-            'default_forecast_years': preferences.default_forecast_years,
-            'confidence_level': preferences.confidence_level,
-            'email_notifications': preferences.email_notifications,
-            'data_updates': preferences.data_updates,
-            'forecast_alerts': preferences.forecast_alerts
-        })
-    return jsonify({})
-
-# Template context processors
-@app.context_processor
-def inject_user_status():
-    """Inject user authentication status into all templates"""
-    return dict(
-        current_user=current_user,
-        is_authenticated=current_user.is_authenticated
-    )
-
-# Error handlers
-@app.errorhandler(404)
-def not_found_error(error):
-    return render_template('404.html'), 404
-
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return render_template('500.html'), 500
-
-# Initialize database
-@app.before_first_request
-def create_tables():
-    """Create database tables"""
+# Create database tables
+with app.app_context():
     db.create_all()
+    
+    # Create demo users if they don't exist
+    if not User.query.filter_by(username='admin').first():
+        admin_user = User(username='admin', email='admin@climatehub.com')
+        admin_user.set_password('admin123')
+        db.session.add(admin_user)
+        db.session.flush()  # This assigns the ID
+        
+        # Create preferences for admin
+        admin_prefs = UserPreferences(user_id=admin_user.id)
+        db.session.add(admin_prefs)
+        
+    if not User.query.filter_by(username='user').first():
+        regular_user = User(username='user', email='user@climatehub.com')
+        regular_user.set_password('user123')
+        db.session.add(regular_user)
+        db.session.flush()  # This assigns the ID
+        
+        # Create preferences for regular user
+        user_prefs = UserPreferences(user_id=regular_user.id)
+        db.session.add(user_prefs)
+        
+    if not User.query.filter_by(username='guest').first():
+        guest_user = User(username='guest', email='guest@climatehub.com')
+        guest_user.set_password('guest123')
+        db.session.add(guest_user)
+        db.session.flush()  # This assigns the ID
+        
+        # Create preferences for guest user
+        guest_prefs = UserPreferences(user_id=guest_user.id)
+        db.session.add(guest_prefs)
+    
+    db.session.commit()
 
 if __name__ == '__main__':
-    # Create database tables
-    with app.app_context():
-        db.create_all()
-    
-    # Run the application
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print("Starting Climate Action Hub Authentication Server...")
+    print("Demo accounts available:")
+    print("  Admin: admin / admin123")
+    print("  User: user / user123") 
+    print("  Guest: guest / guest123")
+    print("Server running on http://localhost:5000")
+    app.run(debug=True, port=5000)
