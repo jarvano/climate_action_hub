@@ -296,8 +296,7 @@
                 <div class="key-findings">
                     <div class="finding-title">🔍 Key Finding</div>
                     <div class="finding-text">
-                        Global CO2 emissions have increased by 45% since 1990, with the steepest rise 
-                        occurring in developing nations. However, per-capita emissions remain highest in developed countries.
+                        Global CO2 emissions have increased by 62% since 1990, with significant acceleration between 2000-2010. However, per-capita emissions have stabilized in developed countries due to efficiency improvements and renewable energy adoption.
                     </div>
                 </div>
             </div>
@@ -310,8 +309,87 @@
                 <div class="key-findings">
                     <div class="finding-title">🔍 Key Finding</div>
                     <div class="finding-text">
-                        Asia accounts for 52% of global emissions, while North America has the highest 
-                        per-capita emissions at 14.7 tons per person annually.
+                        Asia dominates global emissions with 52% share, primarily driven by China's industrial growth. North America and Europe maintain significant per-capita emissions despite efficiency gains.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <h2 class="card-title">🌡️ Global Temperature Anomalies</h2>
+                <div class="chart-container">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+                <div class="key-findings">
+                    <div class="finding-title">🔍 Key Finding</div>
+                    <div class="finding-text">
+                        Global temperature has risen by 1.1°C since pre-industrial times, with accelerating warming since 1980. Arctic regions are warming at twice the global average rate, leading to rapid ice melt and ecosystem changes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <h2 class="card-title">🌊 Sea Level Rise Trends</h2>
+                <div class="chart-container">
+                    <canvas id="seaLevelChart"></canvas>
+                </div>
+                <div class="key-findings">
+                    <div class="finding-title">🔍 Key Finding</div>
+                    <div class="finding-text">
+                        Global sea level has risen by 95mm since 1993, with an average rate of 3.4mm per year. Small island nations and coastal regions face the highest vulnerability, with some areas experiencing rates 50% above the global average.
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🌊</div>
+                        <div class="finding-text">
+                            <strong>Sea Level Rise Acceleration:</strong> Global sea levels are rising at an accelerating rate, with current rates of 3.4mm per year, threatening coastal communities worldwide.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🌡️</div>
+                        <div class="finding-text">
+                            <strong>Global average temperature has increased by approximately 1.1°C since pre-industrial times:</strong> This warming trend is accelerating and shows no signs of slowing down without significant intervention.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🧊</div>
+                        <div class="finding-text">
+                            <strong>Arctic warming is occurring at twice the global average rate:</strong> The Arctic is experiencing rapid ice loss and permafrost thaw, creating dangerous feedback loops.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🏝️</div>
+                        <div class="finding-text">
+                            <strong>Global sea levels have risen by approximately 94.9mm since 1993:</strong> This rise is accelerating and poses significant threats to coastal communities and ecosystems.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🌴</div>
+                        <div class="finding-text">
+                            <strong>Small island developing states experience 30% higher sea level rise:</strong> These vulnerable nations face existential threats from rising seas and require immediate support.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🌡️</div>
+                        <div class="finding-text">
+                            <strong>Global average temperature has increased by approximately 1.1°C since pre-industrial times:</strong> This warming trend is accelerating and shows no signs of slowing down without significant intervention.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🧊</div>
+                        <div class="finding-text">
+                            <strong>Arctic warming is occurring at twice the global average rate:</strong> The Arctic is experiencing rapid ice loss and permafrost thaw, creating dangerous feedback loops.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🏝️</div>
+                        <div class="finding-text">
+                            <strong>Global sea levels have risen by approximately 94.9mm since 1993:</strong> This rise is accelerating and poses significant threats to coastal communities and ecosystems.
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <div class="finding-icon">🌴</div>
+                        <div class="finding-text">
+                            <strong>Small island developing states experience 30% higher sea level rise:</strong> These vulnerable nations face existential threats from rising seas and require immediate support.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -538,6 +616,138 @@
                     },
                     legend: {
                         position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Global Temperature Anomalies Chart
+        const ctx3 = document.getElementById('temperatureChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2023'],
+                datasets: [{
+                    label: 'Global Temperature Anomaly (°C)',
+                    data: [0.45, 0.46, 0.41, 0.69, 0.73, 0.91, 1.02, 1.18],
+                    borderColor: '#ff6b6b',
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ff6b6b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    fill: true
+                }, {
+                    label: 'Arctic Temperature Anomaly (°C)',
+                    data: [0.9, 0.92, 0.82, 1.38, 1.46, 1.82, 2.04, 2.36],
+                    borderColor: '#4ecdc4',
+                    backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#4ecdc4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global Temperature Anomalies (1990-2023)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature Anomaly (°C)'
+                        },
+                        beginAtZero: true
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sea Level Rise Chart
+        const ctx4 = document.getElementById('seaLevelChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: ['1993', '1998', '2003', '2008', '2013', '2018', '2023'],
+                datasets: [{
+                    label: 'Global Mean Sea Level Rise (mm)',
+                    data: [0, 11.5, 25.1, 41.2, 58.2, 76.5, 94.9],
+                    borderColor: '#45b7d1',
+                    backgroundColor: 'rgba(69, 183, 209, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#45b7d1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    fill: true
+                }, {
+                    label: 'Small Island States (mm)',
+                    data: [0, 14.4, 32.6, 53.8, 76.1, 99.8, 124.3],
+                    borderColor: '#f7b731',
+                    backgroundColor: 'rgba(247, 183, 49, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#f7b731',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global Sea Level Rise Trends (1993-2023)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Sea Level Rise (mm)'
+                        },
+                        beginAtZero: true
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
                     }
                 }
             }

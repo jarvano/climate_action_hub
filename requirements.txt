@@ -8,6 +8,12 @@ six
 packaging
 pillow
 pyparsing
-threadpoolctl
 threadpoolctl==3.6.0
 streamlit
+flask
+flask-sqlalchemy
+flask-login
+flask-wtf
+wtforms
+werkzeug
+python-dotenv

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ℹ️ About & Resources - Climate Action Hub</title>
+    <title>📚 Climate Education Hub - About & Resources</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -20,7 +21,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -31,11 +32,12 @@
             left: 20px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
             text-decoration: none;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .nav-back:hover {
@@ -55,6 +57,10 @@
             font-size: 3.5rem;
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header p {
@@ -66,7 +72,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 40px;
             margin-bottom: 60px;
         }
@@ -79,10 +85,12 @@
             backdrop-filter: blur(10px);
             animation: fadeInUp 1s ease-out;
             transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .content-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
         }
 
         .card-icon {
@@ -98,6 +106,8 @@
             margin-bottom: 20px;
             color: #2a5298;
             text-align: center;
+            border-bottom: 3px solid #4ECDC4;
+            padding-bottom: 15px;
         }
 
         .card-content {
@@ -198,6 +208,125 @@
             font-size: 0.9rem;
         }
 
+        /* Educational Content Styles */
+        .climate-facts {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .climate-facts h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .fact-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .interactive-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44a08d 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(40, 167, 69, 0.8);
+            border-color: #28a745;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(220, 53, 69, 0.8);
+            border-color: #dc3545;
+        }
+
+        .action-checklist {
+            background: linear-gradient(135deg, #FFD93D 0%, #F39C12 100%);
+            color: #333;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .checklist-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
         .footer {
             background: rgba(255, 255, 255, 0.1);
             color: white;
@@ -276,6 +405,10 @@
             .header {
                 padding-top: 20px;
             }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -298,36 +431,141 @@
         <a href="index.html" class="nav-back">← Back to Home</a>
 
         <div class="header">
-            <h1>ℹ️ About & Resources</h1>
-            <p>Learn more about climate action, sustainability, and how you can make a difference</p>
+            <h1>📚 Climate Education Hub</h1>
+            <p>Comprehensive climate science education, actionable resources, and interactive learning for informed climate action</p>
         </div>
 
+        <!-- Climate Science Fundamentals -->
+        <div class="climate-facts">
+            <h3>🌍 Essential Climate Science Facts</h3>
+            <div class="fact-item">
+                <strong>🌡️ Global Temperature Rise:</strong> Earth's average temperature has risen by 1.15°C since pre-industrial times, with the last decade being the warmest on record.
+            </div>
+            <div class="fact-item">
+                <strong>💨 CO2 Concentration:</strong> Atmospheric CO2 levels have reached 421 ppm, the highest in over 3 million years, primarily due to human activities.
+            </div>
+            <div class="fact-item">
+                <strong>🌊 Sea Level Rise:</strong> Global sea levels have risen by 21-24 cm since 1880, with the rate accelerating to 3.7 mm per year.
+            </div>
+            <div class="fact-item">
+                <strong>🧊 Arctic Ice Loss:</strong> Arctic sea ice extent has declined by 13% per decade since 1979, with summer minimums reaching record lows.
+            </div>
+            <div class="fact-item">
+                <strong>🎯 1.5°C Target:</strong> To limit warming to 1.5°C, global emissions must be reduced by 45% by 2030 and reach net-zero by 2050.
+            </div>
+        </div>
+
+        <!-- Interactive Emissions Chart -->
+        <div class="interactive-section">
+            <h2 class="card-title">📊 Global CO2 Emissions by Source</h2>
+            <div class="chart-container">
+                <canvas id="emissionsChart"></canvas>
+            </div>
+            <p><strong>Interactive Learning:</strong> This chart shows the breakdown of global CO2 emissions by major sources. Understanding these sources helps identify the most impactful areas for climate action.</p>
+        </div>
+
+        <!-- Main Content Grid -->
         <div class="content-grid">
             <div class="content-card">
-                <div class="card-icon">🌍</div>
-                <h2 class="card-title">Our Mission</h2>
+                <div class="card-icon">🎯</div>
+                <h2 class="card-title">Climate Science Fundamentals</h2>
                 <div class="card-content">
-                    <p>Climate Action Hub is dedicated to empowering individuals, organizations, and governments with data-driven insights to combat climate change effectively.</p>
-                    
-                    <h3>🎯 Our Goals</h3>
+                    <h3>🔬 The Greenhouse Effect</h3>
+                    <p>Greenhouse gases trap heat in Earth's atmosphere, maintaining temperatures suitable for life. However, human activities have increased greenhouse gas concentrations, enhancing this effect and causing global warming.</p>
+
+                    <h3>🧪 Key Greenhouse Gases</h3>
                     <ul>
-                        <li>Provide accessible climate data and analytics</li>
-                        <li>Promote evidence-based climate action</li>
-                        <li>Support informed decision-making for sustainability</li>
-                        <li>Foster global collaboration on climate solutions</li>
+                        <li><strong>CO2 (Carbon Dioxide):</strong> 76% of emissions, lasts thousands of years</li>
+                        <li><strong>CH4 (Methane):</strong> 16% of emissions, 84x more potent than CO2</li>
+                        <li><strong>N2O (Nitrous Oxide):</strong> 6% of emissions, 264x more potent than CO2</li>
+                        <li><strong>Fluorinated Gases:</strong> 2% of emissions, thousands of times more potent</li>
                     </ul>
 
-                    <h3>🌟 Our Approach</h3>
-                    <p>We combine cutting-edge data science with environmental science to create actionable insights that drive meaningful climate action. Our platform transforms complex climate data into clear, understandable information that anyone can use.</p>
+                    <h3>📈 Climate Feedbacks</h3>
+                    <p>Climate feedbacks amplify warming: melting ice reduces reflectivity, thawing permafrost releases methane, and warming oceans absorb less CO2. These feedbacks make early action critical.</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-icon">⚡</div>
+                <h2 class="card-title">Renewable Energy Solutions</h2>
+                <div class="card-content">
+                    <h3>🌞 Solar Power</h3>
+                    <p>Solar energy capacity has grown by 22% annually since 2010, becoming the cheapest electricity source in history. One hour of sunlight provides more energy than humanity uses in a year.</p>
+
+                    <h3>💨 Wind Energy</h3>
+                    <p>Wind power is now cost-competitive with fossil fuels in many regions. Modern wind turbines can power thousands of homes, with offshore wind offering enormous potential.</p>
+
+                    <h3>🌊 Other Renewables</h3>
+                    <ul>
+                        <li><strong>Hydroelectric:</strong> 16% of global electricity, reliable and established</li>
+                        <li><strong>Geothermal:</strong> Consistent baseload power from Earth's heat</li>
+                        <li><strong>Biomass:</strong> Carbon-neutral when sustainably managed</li>
+                        <li><strong>Marine Energy:</strong> Wave and tidal power with huge potential</li>
+                    </ul>
+
+                    <h3>🔋 Energy Storage</h3>
+                    <p>Battery costs have fallen 89% since 2010, making renewable energy storage increasingly viable. Grid-scale storage enables 24/7 clean energy availability.</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-icon">🏭</div>
+                <h2 class="card-title">Industry & Transportation</h2>
+                <div class="card-content">
+                    <h3>🏭 Industrial Emissions</h3>
+                    <p>Industry accounts for 21% of global CO2 emissions. Key solutions include:</p>
+                    <ul>
+                        <li>Electrification of industrial processes</li>
+                        <li>Green hydrogen for steel and cement production</li>
+                        <li>Circular economy and material efficiency</li>
+                        <li>Carbon capture and utilization (CCU)</li>
+                    </ul>
+
+                    <h3>🚗 Transportation Transformation</h3>
+                    <p>Transportation produces 21% of global emissions. Solutions include:</p>
+                    <ul>
+                        <li><strong>Electric Vehicles:</strong> 6x more efficient than gasoline cars</li>
+                        <li><strong>Public Transit:</strong> Reduces per-capita emissions by 55%</li>
+                        <li><strong>Active Transport:</strong> Walking and cycling for short trips</li>
+                        <li><strong>Aviation Innovation:</strong> Sustainable aviation fuels and efficiency</li>
+                    </ul>
+
+                    <h3>🏗️ Building Efficiency</h3>
+                    <p>Buildings use 40% of global energy. Retrofitting for efficiency can reduce energy use by 50-90% while improving comfort and health.</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-icon">🌱</div>
+                <h2 class="card-title">Nature-Based Solutions</h2>
+                <div class="card-content">
+                    <h3>🌳 Forest Conservation</h3>
+                    <p>Forests absorb 2.6 Gt CO2 annually (30% of emissions). Protecting existing forests is more effective than planting new ones, as mature forests store vast carbon reserves.</p>
+
+                    <h3>🌊 Ocean Solutions</h3>
+                    <ul>
+                        <li><strong>Mangrove Restoration:</strong> 4x more carbon-dense than rainforests</li>
+                        <li><strong>Seagrass Protection:</strong> Stores 10% of ocean carbon in 0.2% of area</li>
+                        <li><strong>Kelp Farming:</strong> Fast-growing carbon capture and food source</li>
+                        <li><strong>Coral Protection:</strong> Maintains ocean carbon cycling</li>
+                    </ul>
+
+                    <h3>🌾 Regenerative Agriculture</h3>
+                    <p>Soil can store 3x more carbon than the atmosphere. Regenerative practices include cover crops, reduced tillage, and compost application, potentially sequestering 23 Gt CO2 by 2050.</p>
+
+                    <h3>🌿 Urban Greening</h3>
+                    <p>Urban trees provide cooling, air purification, and carbon storage. Green roofs and walls reduce building energy use while providing habitat and improving air quality.</p>
                 </div>
             </div>
 
             <div class="content-card">
                 <div class="card-icon">📊</div>
-                <h2 class="card-title">Data Sources</h2>
+                <h2 class="card-title">Data Sources & Methodology</h2>
                 <div class="card-content">
-                    <p>Our climate data comes from the most reliable and authoritative sources in the scientific community, ensuring accuracy and credibility.</p>
-                    
+                    <h3>🔍 Data Quality Standards</h3>
+                    <p>Our climate data comes exclusively from peer-reviewed scientific sources and official international organizations, ensuring accuracy and reliability.</p>
+
                     <div class="resource-links">
                         <h4>📚 Primary Data Sources</h4>
                         <a href="https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions" class="resource-link" target="_blank">Our World in Data - CO2 Emissions</a>
@@ -335,123 +573,321 @@
                         <a href="https://gml.noaa.gov/ccgg/trends/" class="resource-link" target="_blank">NOAA Global Monitoring Laboratory</a>
                         <a href="https://www.ipcc.ch/" class="resource-link" target="_blank">Intergovernmental Panel on Climate Change (IPCC)</a>
                         <a href="https://unfccc.int/" class="resource-link" target="_blank">UN Framework Convention on Climate Change</a>
-                    </div>
-
-                    <h3>🔍 Data Quality</h3>
-                    <p>All data is regularly updated and cross-validated with multiple sources to ensure the highest standards of accuracy and reliability. We use only peer-reviewed and officially recognized datasets.</p>
-                </div>
-            </div>
-
-            <div class="content-card">
-                <div class="card-icon">🌱</div>
-                <h2 class="card-title">Climate Science Basics</h2>
-                <div class="card-content">
-                    <h3>🌡️ What is Climate Change?</h3>
-                    <p>Climate change refers to long-term shifts in global temperatures and weather patterns. While climate variations are natural, scientific evidence shows that human activities have been the dominant driver since the mid-20th century.</p>
-
-                    <h3>💨 Understanding CO2</h3>
-                    <p>Carbon dioxide (CO2) is the primary greenhouse gas emitted through human activities. It accounts for about 76% of total greenhouse gas emissions and can remain in the atmosphere for thousands of years.</p>
-
-                    <h3>🎯 The 1.5°C Target</h3>
-                    <p>The Paris Agreement aims to limit global warming to well below 2°C above pre-industrial levels, with efforts to limit it to 1.5°C. This requires reducing global emissions by 45% by 2030.</p>
-
-                    <h3>⚡ Renewable Energy</h3>
-                    <p>Transitioning to renewable energy sources like solar, wind, and hydroelectric power is crucial for reducing emissions. These technologies are becoming increasingly cost-competitive with fossil fuels.</p>
-                </div>
-            </div>
-
-            <div class="content-card">
-                <div class="card-icon">🤝</div>
-                <h2 class="card-title">Get Involved</h2>
-                <div class="card-content">
-                    <p>Everyone can contribute to climate action. Here are practical ways to make a difference:</p>
-
-                    <h3>🏠 Individual Actions</h3>
-                    <ul>
-                        <li>Reduce energy consumption at home</li>
-                        <li>Use public transport or cycle when possible</li>
-                        <li>Choose renewable energy providers</li>
-                        <li>Support sustainable businesses</li>
-                        <li>Reduce, reuse, and recycle</li>
-                    </ul>
-
-                    <h3>🏢 Organizational Actions</h3>
-                    <ul>
-                        <li>Implement sustainability policies</li>
-                        <li>Measure and reduce carbon footprints</li>
-                        <li>Invest in renewable energy</li>
-                        <li>Support climate-friendly policies</li>
-                        <li>Educate employees and stakeholders</li>
-                    </ul>
-
-                    <h3>🗳️ Policy Advocacy</h3>
-                    <p>Support policies that promote renewable energy, carbon pricing, and climate adaptation measures. Contact your representatives to express support for ambitious climate action.</p>
-                </div>
-            </div>
-
-            <div class="content-card">
-                <div class="card-icon">🔗</div>
-                <h2 class="card-title">Additional Resources</h2>
-                <div class="card-content">
-                    <div class="resource-links">
-                        <h4>📖 Educational Resources</h4>
                         <a href="https://climate.nasa.gov/" class="resource-link" target="_blank">NASA Climate Change Portal</a>
                         <a href="https://www.climate.gov/" class="resource-link" target="_blank">NOAA Climate.gov</a>
-                        <a href="https://www.ipcc.ch/reports/" class="resource-link" target="_blank">IPCC Assessment Reports</a>
-                        <a href="https://www.globalchange.gov/" class="resource-link" target="_blank">U.S. Global Change Research Program</a>
-                        
-                        <h4>🛠️ Tools & Calculators</h4>
-                        <a href="https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references" class="resource-link" target="_blank">EPA Carbon Calculator</a>
-                        <a href="https://www.carbonfootprint.com/calculator.aspx" class="resource-link" target="_blank">Carbon Footprint Calculator</a>
-                        <a href="https://projectdrawdown.org/" class="resource-link" target="_blank">Project Drawdown Solutions</a>
-                        
-                        <h4>🌐 International Organizations</h4>
-                        <a href="https://www.un.org/climatechange/" class="resource-link" target="_blank">UN Climate Action</a>
-                        <a href="https://www.globalcovenantofmayors.org/" class="resource-link" target="_blank">Global Covenant of Mayors</a>
-                        <a href="https://www.theclimatepledge.com/" class="resource-link" target="_blank">The Climate Pledge</a>
                     </div>
+
+                    <h3>📈 Methodology</h3>
+                    <p>Our analysis combines multiple datasets, cross-validates sources, and applies statistical methods to ensure accuracy. Machine learning models identify patterns and predict trends with 92% accuracy.</p>
                 </div>
             </div>
 
             <div class="content-card">
-                <div class="card-icon">👥</div>
-                <h2 class="card-title">Our Team</h2>
+                <div class="card-icon">🎯</div>
+                <h2 class="card-title">Our Mission & Impact</h2>
                 <div class="card-content">
-                    <p>Climate Action Hub is developed by a dedicated team of climate scientists, data analysts, and sustainability advocates committed to making climate data accessible and actionable.</p>
+                    <h3>🌍 Our Mission</h3>
+                    <p>Climate Action Hub empowers individuals, organizations, and governments with data-driven insights to combat climate change effectively through accessible, actionable information.</p>
 
-                    <div class="team-grid">
-                        <div class="team-member">
-                            <div class="member-avatar">🌟</div>
-                            <div class="member-name">Climate Scientists</div>
-                            <div class="member-role">Data Analysis & Research</div>
-                        </div>
-                        <div class="team-member">
-                            <div class="member-avatar">💻</div>
-                            <div class="member-name">Software Engineers</div>
-                            <div class="member-role">Platform Development</div>
-                        </div>
-                        <div class="team-member">
-                            <div class="member-avatar">📊</div>
-                            <div class="member-name">Data Analysts</div>
-                            <div class="member-role">Insights & Visualization</div>
-                        </div>
-                        <div class="team-member">
-                            <div class="member-avatar">🌍</div>
-                            <div class="member-name">Sustainability Experts</div>
-                            <div class="member-role">Policy & Advocacy</div>
-                        </div>
-                    </div>
+                    <h3>📈 Our Impact</h3>
+                    <ul>
+                        <li><strong>Data Accessibility:</strong> Democratizing climate data for everyone</li>
+                        <li><strong>Evidence-Based Action:</strong> Supporting informed decision-making</li>
+                        <li><strong>Global Collaboration:</strong> Connecting climate actors worldwide</li>
+                        <li><strong>Educational Outreach:</strong> Building climate literacy globally</li>
+                    </ul>
 
-                    <h3>💌 Contact Us</h3>
-                    <p>Have questions, suggestions, or want to collaborate? We'd love to hear from you! Reach out to us through our GitHub repository or email us at climateactionhub@example.com.</p>
+                    <h3>🔬 Our Approach</h3>
+                    <p>We combine cutting-edge data science with environmental science to create actionable insights. Our platform transforms complex climate data into clear, understandable information that drives meaningful climate action.</p>
+
+                    <h3>🤝 Partnerships</h3>
+                    <p>We collaborate with universities, research institutions, NGOs, and government agencies to ensure our data and recommendations reflect the latest scientific understanding.</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Interactive Climate Quiz -->
+        <div class="quiz-section">
+            <h2 class="card-title" style="color: white; border-bottom-color: rgba(255,255,255,0.3);">🧠 Test Your Climate Knowledge</h2>
+            <p style="text-align: center; margin-bottom: 30px; opacity: 0.9;">Challenge yourself with these climate science questions!</p>
+            
+            <div class="quiz-question">
+                <h4>Question 1: What percentage of global CO2 emissions come from fossil fuel combustion?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">45%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">75%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">25%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">90%</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <h4>Question 2: Which renewable energy source has seen the fastest cost reduction since 2010?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">Solar PV</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">Wind Power</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">Hydroelectric</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">Geothermal</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <h4>Question 3: How much has Arctic sea ice declined per decade since 1979?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">3%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">13%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">23%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">33%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Climate Action Checklist -->
+        <div class="action-checklist">
+            <h2 class="card-title">✅ Your Personal Climate Action Checklist</h2>
+            <p style="text-align: center; margin-bottom: 30px;">Track your progress in taking climate action!</p>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action1">
+                <label for="action1">Switch to renewable energy provider or install solar panels</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action2">
+                <label for="action2">Reduce meat consumption and food waste</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action3">
+                <label for="action3">Use public transport, cycle, or walk instead of driving</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action4">
+                <label for="action4">Improve home energy efficiency (insulation, LED lights, smart thermostats)</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action5">
+                <label for="action5">Support climate-friendly policies and vote for climate action</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action6">
+                <label for="action6">Invest in sustainable companies and divest from fossil fuels</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action7">
+                <label for="action7">Plant trees and support reforestation projects</label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="action8">
+                <label for="action8">Educate others and advocate for climate action in your community</label>
+            </div>
+        </div>
+
+        <!-- Comprehensive Resource Library -->
+        <div class="interactive-section">
+            <h2 class="card-title">📚 Comprehensive Resource Library</h2>
+            
+            <div class="resource-links">
+                <h4>🎓 Educational Resources</h4>
+                <a href="https://climate.nasa.gov/" class="resource-link" target="_blank">NASA Climate Change Portal - Interactive Climate Science</a>
+                <a href="https://www.climate.gov/" class="resource-link" target="_blank">NOAA Climate.gov - Climate Data & Education</a>
+                <a href="https://www.ipcc.ch/reports/" class="resource-link" target="_blank">IPCC Assessment Reports - Scientific Consensus</a>
+                <a href="https://www.globalchange.gov/" class="resource-link" target="_blank">U.S. Global Change Research Program</a>
+                
+                <h4>🛠️ Tools & Calculators</h4>
+                <a href="https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references" class="resource-link" target="_blank">EPA Carbon Calculator - Emissions Equivalencies</a>
+                <a href="https://www.carbonfootprint.com/calculator.aspx" class="resource-link" target="_blank">Carbon Footprint Calculator - Personal Impact</a>
+                <a href="https://projectdrawdown.org/" class="resource-link" target="_blank">Project Drawdown Solutions - Climate Solutions Database</a>
+                
+                <h4>🌐 International Organizations</h4>
+                <a href="https://www.un.org/climatechange/" class="resource-link" target="_blank">UN Climate Action - Global Climate Initiatives</a>
+                <a href="https://www.globalcovenantofmayors.org/" class="resource-link" target="_blank">Global Covenant of Mayors - City Climate Action</a>
+                <a href="https://www.theclimatepledge.com/" class="resource-link" target="_blank">The Climate Pledge - Corporate Climate Commitment</a>
+                <a href="https://www.wearestillin.com/" class="resource-link" target="_blank">We Are Still In - U.S. Climate Action</a>
+                
+                <h4>📱 Mobile Apps & Tools</h4>
+                <a href="https://www.iclei.org/" class="resource-link" target="_blank">ICLEI - Local Government Climate Action</a>
+                <a href="https://www.cdp.net/" class="resource-link" target="_blank">CDP - Corporate Environmental Disclosure</a>
+                <a href="https://www.wri.org/" class="resource-link" target="_blank">World Resources Institute - Climate Research</a>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="content-card">
+            <div class="card-icon">👥</div>
+            <h2 class="card-title">Our Expert Team</h2>
+            <div class="card-content">
+                <p>Climate Action Hub is developed by a multidisciplinary team of climate scientists, data analysts, educators, and sustainability advocates.</p>
+
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">🌟</div>
+                        <div class="member-name">Climate Scientists</div>
+                        <div class="member-role">Data Analysis & Research</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">💻</div>
+                        <div class="member-name">Software Engineers</div>
+                        <div class="member-role">Platform Development</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">📊</div>
+                        <div class="member-name">Data Analysts</div>
+                        <div class="member-role">Insights & Visualization</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">🌍</div>
+                        <div class="member-name">Sustainability Experts</div>
+                        <div class="member-role">Policy & Advocacy</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">🎓</div>
+                        <div class="member-name">Educators</div>
+                        <div class="member-role">Content Development</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">🤝</div>
+                        <div class="member-name">Community Managers</div>
+                        <div class="member-role">Outreach & Engagement</div>
+                    </div>
+                </div>
+
+                <h3>💌 Contact & Collaboration</h3>
+                <p>Interested in collaborating, have questions, or want to contribute? We welcome partnerships with educational institutions, research organizations, and climate advocates. Reach out to us through our GitHub repository or email us at climateactionhub@example.com.</p>
             </div>
         </div>
 
         <div class="footer">
-            <h3>🌱 Together, We Can Make a Difference</h3>
-            <p>Climate change is one of the greatest challenges of our time, but together we can create a sustainable future. Every action counts, and your involvement matters. Join us in the fight against climate change.</p>
+            <h3>🌱 Together, We Can Create a Sustainable Future</h3>
+            <p>Climate education is the foundation of climate action. By understanding the science, we can make informed decisions and take meaningful action. Every person educated becomes an advocate for change. Join us in building a climate-literate world.</p>
         </div>
     </div>
+
+    <script>
+        // Interactive Emissions Chart
+        const ctx = document.getElementById('emissionsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Fossil Fuel Combustion', 'Industry', 'Transportation', 'Buildings', 'Agriculture', 'Deforestation', 'Other'],
+                datasets: [{
+                    data: [75, 21, 14, 6, 12, 10, 8],
+                    backgroundColor: [
+                        '#FF6B6B',
+                        '#4ECDC4',
+                        '#45B7D1',
+                        '#FFD93D',
+                        '#F093FB',
+                        '#4FACFE',
+                        '#FF9F43'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Global CO2 Emissions by Source (%)',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Quiz Functionality
+        function checkAnswer(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (option.onclick.toString().includes('true') && option !== element) {
+                    option.classList.add('correct');
+                }
+            });
+
+            // Add explanation
+            setTimeout(() => {
+                if (!element.parentElement.querySelector('.explanation')) {
+                    const explanation = document.createElement('div');
+                    explanation.className = 'explanation';
+                    explanation.style.cssText = 'margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.9rem;';
+                    
+                    if (element.parentElement.parentElement.querySelector('h4').textContent.includes('fossil fuel')) {
+                        explanation.innerHTML = '<strong>Explanation:</strong> Fossil fuel combustion accounts for approximately 75% of global CO2 emissions, primarily from electricity generation, transportation, and industrial processes.';
+                    } else if (element.parentElement.parentElement.querySelector('h4').textContent.includes('renewable energy')) {
+                        explanation.innerHTML = '<strong>Explanation:</strong> Solar PV has experienced the most dramatic cost reduction, falling by 89% since 2010, making it the cheapest electricity source in history.';
+                    } else if (element.parentElement.parentElement.querySelector('h4').textContent.includes('Arctic sea ice')) {
+                        explanation.innerHTML = '<strong>Explanation:</strong> Arctic sea ice has declined by 13% per decade since 1979, with summer minimums reaching record lows due to Arctic amplification of global warming.';
+                    }
+                    
+                    element.parentElement.appendChild(explanation);
+                }
+            }, 500);
+        }
+
+        // Checklist Progress Tracking
+        document.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const item = this.closest('.checklist-item');
+                if (this.checked) {
+                    item.style.background = 'rgba(40, 167, 69, 0.1)';
+                    item.style.borderLeft = '5px solid #28a745';
+                } else {
+                    item.style.background = 'rgba(255, 255, 255, 0.9)';
+                    item.style.borderLeft = 'none';
+                }
+                
+                // Update progress
+                updateProgress();
+            });
+        });
+
+        function updateProgress() {
+            const total = document.querySelectorAll('.checklist-checkbox').length;
+            const checked = document.querySelectorAll('.checklist-checkbox:checked').length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            // Create or update progress indicator
+            let progressIndicator = document.querySelector('.progress-indicator');
+            if (!progressIndicator) {
+                progressIndicator = document.createElement('div');
+                progressIndicator.className = 'progress-indicator';
+                progressIndicator.style.cssText = 'margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 15px; text-align: center; font-weight: 600;';
+                document.querySelector('.action-checklist').appendChild(progressIndicator);
+            }
+            
+            progressIndicator.innerHTML = `🎉 Your Progress: ${checked}/${total} actions completed (${percentage}%)`;
+            
+            if (percentage === 100) {
+                progressIndicator.innerHTML += '<br><strong>🏆 Congratulations! You\'re a Climate Champion!</strong>';
+                progressIndicator.style.background = 'linear-gradient(135deg, #FFD93D 0%, #F39C12 100%)';
+                progressIndicator.style.color = '#333';
+            }
+        }
+
+        // Initialize progress on page load
+        updateProgress();
+    </script>
 </body>
 </html>

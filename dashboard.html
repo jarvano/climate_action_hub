@@ -529,6 +529,88 @@
             </div>
         </div>
 
+        <!-- Temperature Trends Section -->
+        <div class="dashboard-grid">
+            <div class="chart-panel">
+                <h2 class="panel-title">🌡️ Global Temperature Anomalies</h2>
+                <div class="chart-container">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="tempAnomaly2023">+1.18°C</div>
+                        <div class="stat-label">2023 Anomaly</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="arcticAnomaly2023">+2.36°C</div>
+                        <div class="stat-label">Arctic Anomaly</div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-panel">
+                <h2 class="panel-title">🌡️ Temperature Insights</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">+0.73°C</div>
+                        <div class="stat-label">Average Decade Increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2023</div>
+                        <div class="stat-label">Warmest Year on Record</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2x</div>
+                        <div class="stat-label">Arctic Warming Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">1.5°C</div>
+                        <div class="stat-label">Paris Agreement Limit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sea Level Rise Section -->
+        <div class="dashboard-grid">
+            <div class="chart-panel">
+                <h2 class="panel-title">🌊 Sea Level Rise Trends</h2>
+                <div class="chart-container">
+                    <canvas id="seaLevelChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="seaLevelRise2023">+94.9mm</div>
+                        <div class="stat-label">Total Rise Since 1993</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="islandRise2023">+124.3mm</div>
+                        <div class="stat-label">Small Islands Rise</div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-panel">
+                <h2 class="panel-title">🌊 Sea Level Insights</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">3.4mm</div>
+                        <div class="stat-label">Annual Rise Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">30%</div>
+                        <div class="stat-label">Higher in Island States</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2050</div>
+                        <div class="stat-label">Projected +200mm</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">630M</div>
+                        <div class="stat-label">People at Risk</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-panel">
             <h2 class="panel-title">📋 Historical Data</h2>
             <table class="data-table">
@@ -931,6 +1013,142 @@
             });
         }
 
+        // Initialize temperature chart
+        function initTemperatureChart() {
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            temperatureChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1990', '1995', '2000', '2005', '2010', '2015', '2020', '2023'],
+                    datasets: [{
+                        label: 'Global Temperature Anomaly (°C)',
+                        data: [0.45, 0.46, 0.41, 0.69, 0.73, 0.91, 1.02, 1.18],
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ff6b6b',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }, {
+                        label: 'Arctic Temperature Anomaly (°C)',
+                        data: [0.9, 0.92, 0.82, 1.38, 1.46, 1.82, 2.04, 2.36],
+                        borderColor: '#4ecdc4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#4ecdc4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Global Temperature Anomalies (1990-2023)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature Anomaly (°C)'
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize sea level chart
+        function initSeaLevelChart() {
+            const ctx = document.getElementById('seaLevelChart').getContext('2d');
+            seaLevelChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1993', '1998', '2003', '2008', '2013', '2018', '2023'],
+                    datasets: [{
+                        label: 'Global Mean Sea Level Rise (mm)',
+                        data: [0, 11.5, 25.1, 41.2, 58.2, 76.5, 94.9],
+                        borderColor: '#45b7d1',
+                        backgroundColor: 'rgba(69, 183, 209, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#45b7d1',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }, {
+                        label: 'Small Island States (mm)',
+                        data: [0, 14.4, 32.6, 53.8, 76.1, 99.8, 124.3],
+                        borderColor: '#f7b731',
+                        backgroundColor: 'rgba(247, 183, 49, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#f7b731',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Global Sea Level Rise Trends (1993-2023)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Sea Level Rise (mm)'
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         // Event listeners
         document.getElementById('countrySelect').addEventListener('change', updateChart);
         document.getElementById('yearSelect').addEventListener('change', updateChart);
@@ -939,6 +1157,8 @@
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             initChart();
+            initTemperatureChart();
+            initSeaLevelChart();
             loadRealData().then(() => {
                 // Auto-select first country if available
                 const data = realData || sampleData;
